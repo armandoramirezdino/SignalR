@@ -194,6 +194,9 @@ namespace Microsoft.AspNet.SignalR.Transports
                                         connection, 
                                         initialize ?? _emptyTaskFunc };
 
+            // Ensure that the response is the first thing in the write queue
+            //EnqueueOperation(state => InitializeResponse((ITransportConnection)state), connection).Catch();
+
             Func<Task> fullInit = () => TaskAsyncHelper.Series(series, states);
 
             return ProcessMessages(connection, fullInit);

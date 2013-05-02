@@ -47,6 +47,7 @@ namespace Microsoft.AspNet.SignalR.Transports
 
             // Ensure delegate continues to use the C# Compiler static delegate caching optimization.
             return transport.EnqueueOperation(s => WriteInit(s), state);
+            //return WriteInit(state);
         }
 
         private static Task PerformKeepAlive(object state)

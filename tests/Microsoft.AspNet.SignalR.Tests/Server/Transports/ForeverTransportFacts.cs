@@ -340,6 +340,12 @@ namespace Microsoft.AspNet.SignalR.Tests.Server.Transports
             EnqueAsyncWriteAndEndRequest(writeFaulted);
         }
 
+        [Fact]
+        public void RequestsCompletesAfterFaultedInitializeResponse()
+        {
+
+        }
+
         public void EnqueAsyncWriteAndEndRequest(Func<Task> writeAsync)
         {
             var response = new Mock<IResponse>();

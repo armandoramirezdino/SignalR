@@ -25,7 +25,7 @@ namespace Microsoft.AspNet.SignalR.Samples
                     {
                         System.Diagnostics.Trace.TraceError("SignalR error thrown in Streaming broadcast: {0}", ex);
                     }
-                    Thread.Sleep(2000);
+                    Thread.Sleep(100);
                 }
             });
         }

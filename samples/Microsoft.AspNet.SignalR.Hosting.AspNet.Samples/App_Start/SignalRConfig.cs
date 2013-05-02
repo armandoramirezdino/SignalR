@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using Microsoft.AspNet.SignalR.Hubs;
 using Microsoft.AspNet.SignalR.Redis;
 
@@ -21,6 +22,9 @@ namespace Microsoft.AspNet.SignalR.Samples
             //dependencyResolver.UseServiceBus("connection string", "Microsoft.AspNet.SignalR.Samples");
 
             hubPipeline.AddModule(new SamplePipelineModule());
+
+            GlobalHost.Configuration.ConnectionTimeout = TimeSpan.FromSeconds(5);
+            GlobalHost.Configuration.KeepAlive = null;
         }
 
         private class SamplePipelineModule : HubPipelineModule

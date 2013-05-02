@@ -36,7 +36,7 @@ namespace Microsoft.AspNet.SignalR.Client.Transports
 
             //set long running to false;
 
-            return httpClient.Get(negotiateUrl, connection.PrepareRequest, true)
+            return httpClient.Get(negotiateUrl, connection.PrepareRequest, false)
                             .Then(response => response.ReadAsString())
                             .Then(raw =>
                             {

@@ -32,7 +32,11 @@ namespace Microsoft.AspNet.SignalR.Client.Transports
 #endif
             negotiateUrl += AppendCustomQueryString(connection, negotiateUrl);
 
-            return httpClient.Get(negotiateUrl, connection.PrepareRequest)
+            httpClient.Initialize(connection);
+
+            //set long running to false;
+
+            return httpClient.Get(negotiateUrl, connection.PrepareRequest, true)
                             .Then(response => response.ReadAsString())
                             .Then(raw =>
                             {

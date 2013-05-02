@@ -89,13 +89,16 @@ namespace Microsoft.AspNet.SignalR.Client.Transports
 
             connection.Trace(TraceLevels.Events, "SSE: GET {0}", url);
 
+            //A long running request
+
             HttpClient.Get(url, req =>
             {
-                _request = req;
+                _request = req;               
+                _request.Accept = "text/event-stream";
+                
                 connection.PrepareRequest(_request);
 
-                _request.Accept = "text/event-stream";
-            }).ContinueWith(task =>
+            }, true).ContinueWith(task =>
             {
                 if (task.IsFaulted)
                 {

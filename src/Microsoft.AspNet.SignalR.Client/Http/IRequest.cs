@@ -20,23 +20,6 @@ namespace Microsoft.AspNet.SignalR.Client.Http
         string UserAgent { get; set; }
 
         /// <summary>
-        /// The credentials for this request.
-        /// </summary>
-        ICredentials Credentials { get; set; }
-
-        /// <summary>
-        /// The cookies for this request.
-        /// </summary>
-        CookieContainer CookieContainer { get; set; }
-
-#if !SILVERLIGHT
-        /// <summary>
-        /// The proxy information for this request.
-        /// </summary>
-        IWebProxy Proxy { get; set; }
-#endif
-
-        /// <summary>
         /// The accept header for this request.
         /// </summary>
         string Accept { get; set; }
@@ -51,13 +34,5 @@ namespace Microsoft.AspNet.SignalR.Client.Http
         /// </summary>
         /// <param name="headers">request headers</param>
         void SetRequestHeaders(IDictionary<string, string> headers);
-
-#if (NET4 || NET45)
-        /// <summary>
-        /// Sets client certificates
-        /// </summary>
-        /// <param name="certificates">client certificates</param>
-        void AddClientCerts(X509CertificateCollection certificates);
-#endif
     }
 }

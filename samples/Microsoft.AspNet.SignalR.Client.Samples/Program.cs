@@ -3,6 +3,8 @@ using Microsoft.AspNet.SignalR.Client.Hubs;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNet.SignalR.Client.Transports;
+using Microsoft.AspNet.SignalR.Client.Http;
 
 namespace Microsoft.AspNet.SignalR.Client.Samples
 {
@@ -20,7 +22,29 @@ namespace Microsoft.AspNet.SignalR.Client.Samples
 
             // RunStreamingSample();
 
-            RunStatusHub();
+            // RunStatusHub();
+
+            using (var mre = new ManualResetEvent(false))
+            {
+                // ServicePointManager.DefaultConnectionLimit = 2;
+                var iteration = 0;
+                var hubConnection = new HubConnection("http://localhost:40476/");
+                var proxy = hubConnection.CreateHubProxy("SimpleEchoHub");
+
+                proxy.On("AsyncEcho", id =>
+                {
+                    Console.WriteLine("Received id: {0}", id);
+                    mre.Set();
+                });
+
+                hubConnection.Start(new LongPollingTransport()).Wait();
+
+                Console.WriteLine("Invoking AsyncEcho");
+                proxy.Invoke("AsyncEcho", iteration++).Wait();
+                Console.WriteLine("Invoked AsyncEcho");
+                mre.WaitOne();
+                Console.WriteLine("Completed");
+            }
 
             Console.ReadKey();
         }
@@ -30,9 +54,9 @@ namespace Microsoft.AspNet.SignalR.Client.Samples
             var hubConnection = new HubConnection("http://localhost:40476/");
             var proxy = hubConnection.CreateHubProxy("statushub");
 
-            proxy.On<string,string>("joined", (connectionId, date) =>
+            proxy.On<string, string>("joined", (connectionId, date) =>
             {
-                 Console.WriteLine(connectionId + " joined on "+date);   
+                Console.WriteLine(connectionId + " joined on " + date);
             });
 
             Console.Read();

@@ -70,7 +70,7 @@ namespace Microsoft.AspNet.SignalR.Client
         private JsonSerializer _jsonSerializer = new JsonSerializer();
 
 #if (NET4 || NET45)
-        private readonly X509CertificateCollection certCollection = new X509CertificateCollection();
+        private readonly X509CertificateCollection _certCollection = new X509CertificateCollection();
 #endif
 
         /// <summary>
@@ -174,6 +174,16 @@ namespace Microsoft.AspNet.SignalR.Client
                 _keepAliveData = value;
             }
         }
+       
+#if NET4 || NET45
+        X509CertificateCollection IConnection.Certificates
+        {
+            get
+            {
+                return _certCollection;
+            }
+        }
+#endif
 
         public TraceLevels TraceLevel { get; set; }
 
@@ -580,7 +590,7 @@ namespace Microsoft.AspNet.SignalR.Client
                     throw new InvalidOperationException(Resources.Error_CertsCanOnlyBeAddedWhenDisconnected);
                 }
 
-                certCollection.Add(certificate);
+                _certCollection.Add(certificate);
             }
         }
 #endif
@@ -687,27 +697,7 @@ namespace Microsoft.AspNet.SignalR.Client
             request.UserAgent = CreateUserAgentString("SignalR.Client");
 #endif
 #endif
-            if (Credentials != null)
-            {
-                request.Credentials = Credentials;
-            }
-
-            if (CookieContainer != null)
-            {
-                request.CookieContainer = CookieContainer;
-            }
-
-#if !SILVERLIGHT
-            if (Proxy != null)
-            {
-                request.Proxy = Proxy;
-            }
-#endif
             request.SetRequestHeaders(Headers);
-
-#if (NET4 || NET45)
-            request.AddClientCerts(certCollection);
-#endif
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Can be called via other clients.")]
@@ -776,7 +766,11 @@ namespace Microsoft.AspNet.SignalR.Client
 
             public override void WriteLine(string value)
             {
+#if NETFX_CORE
                 Debug.WriteLine(value);
+#else
+                Console.WriteLine(value);
+#endif
             }
 
 #if NETFX_CORE

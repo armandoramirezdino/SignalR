@@ -67,6 +67,8 @@ namespace Microsoft.AspNet.SignalR.Client.Transports
 
         public Task Start(IConnection connection, string data, CancellationToken disconnectToken)
         {
+            //HttpClient.Initialize(connection);
+
             var tcs = new TaskCompletionSource<object>();
 
             OnStart(connection, data, disconnectToken, () => tcs.TrySetResult(null), exception => tcs.TrySetException(exception));
@@ -82,6 +84,7 @@ namespace Microsoft.AspNet.SignalR.Client.Transports
 
         public Task Send(IConnection connection, string data)
         {
+            // not a long running request
             if (connection == null)
             {
                 throw new ArgumentNullException("connection");
@@ -100,7 +103,7 @@ namespace Microsoft.AspNet.SignalR.Client.Transports
                 { "data", data }
             };
 
-            return _httpClient.Post(url, connection.PrepareRequest, postData)
+            return _httpClient.Post(url, connection.PrepareRequest, postData, false)
                               .Then(response => response.ReadAsString())
                               .Then(raw =>
                               {
@@ -116,6 +119,7 @@ namespace Microsoft.AspNet.SignalR.Client.Transports
 
         public void Abort(IConnection connection, TimeSpan timeout)
         {
+            // not a long running request
             if (connection == null)
             {
                 throw new ArgumentNullException("connection");
@@ -142,7 +146,7 @@ namespace Microsoft.AspNet.SignalR.Client.Transports
 
                     url += TransportHelper.AppendCustomQueryString(connection, url);
 
-                    _httpClient.Post(url, connection.PrepareRequest).Catch((ex, state) =>
+                    _httpClient.Post(url, connection.PrepareRequest, false).Catch((ex, state) =>
                     {
                         // If there's an error making an http request set the reset event
                         ((HttpBasedTransport)state).CompleteAbort();

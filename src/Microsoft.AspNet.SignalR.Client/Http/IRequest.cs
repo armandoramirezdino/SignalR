@@ -1,11 +1,6 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.md in the project root for license information.
 
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Net;
-#if (NET4 || NET45)
-using System.Security.Cryptography.X509Certificates;
-#endif
 
 namespace Microsoft.AspNet.SignalR.Client.Http
 {

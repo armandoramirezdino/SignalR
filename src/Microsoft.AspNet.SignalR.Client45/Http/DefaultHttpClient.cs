@@ -27,7 +27,7 @@ namespace Microsoft.AspNet.SignalR.Client.Http
             var handler = new DefaultHttpHandler(connection);
 
             _longRunningClient = new HttpClient(handler);
-            _shortRunningClient = new HttpClient(handler);          
+            _shortRunningClient = new HttpClient(handler);
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace Microsoft.AspNet.SignalR.Client.Http
 
             prepareRequest(request);
 
-            HttpClient httpClient = (isLongRunning) ? _longRunningClient : _shortRunningClient; 
+            HttpClient httpClient = isLongRunning ? _longRunningClient : _shortRunningClient;
 
             return httpClient.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead, cts.Token)
                  .Then(responseMessage =>
@@ -68,7 +68,7 @@ namespace Microsoft.AspNet.SignalR.Client.Http
                          ConnectionTrace("get request unsuccessful - throwing client exception, responseMessage : {0}", responseMessage.ToString());
                          throw new HttpClientException(responseMessage);
                      }
-  
+
                      return (IResponse)new HttpResponseMessageWrapper(responseMessage);
                  });
         }
@@ -100,7 +100,7 @@ namespace Microsoft.AspNet.SignalR.Client.Http
 
             ConnectionTrace("post request content : {0}", requestMessage.ToString());
 
-            HttpClient httpClient = (isLongRunning) ? _longRunningClient : _shortRunningClient; 
+            HttpClient httpClient = isLongRunning ? _longRunningClient : _shortRunningClient;
 
             return httpClient.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead, cts.Token).
                 Then(responseMessage =>
@@ -118,8 +118,6 @@ namespace Microsoft.AspNet.SignalR.Client.Http
 
                     return (IResponse)new HttpResponseMessageWrapper(responseMessage);
                 });
-
-            // return retVal.Finally((state) => { return (IResponse)new HttpResponseMessageWrapper((HttpResponseMessage)state, client); }, resMessage);
         }
 
         public void ConnectionTrace(string format, params object[] args)

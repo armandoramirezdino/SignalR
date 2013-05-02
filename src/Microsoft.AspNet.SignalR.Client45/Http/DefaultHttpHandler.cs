@@ -46,7 +46,10 @@ namespace Microsoft.AspNet.SignalR.Client.Http
                 // request.Headers.UserAgent.Add(new ProductInfoHeaderValue(UserAgent));
             }
 
-            //_httpRequestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(Accept));
+            if (Accept != null)
+            {
+                _httpRequestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(Accept));
+            }
 
             foreach (KeyValuePair<string, string> headerEntry in headers)
             {
